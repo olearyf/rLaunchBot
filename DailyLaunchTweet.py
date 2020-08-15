@@ -14,11 +14,12 @@ access_token_secret = 'your_access_token_secret'
 
 # Stores launch data per returned launch
 class Launch:
-    def __init__(self, name, date, infoURLs, pad):
+    def __init__(self, name, date, infoURLs, pad, imageURL):
         self.name = name
         self.date = date
         self.infoURLs = infoURLs
         self.pad = pad
+        self.imageURL = imageURL
         
 # Determines if a launch is today or not
 def isToday(date):
@@ -77,7 +78,12 @@ def job():
             date = jsonParsed["launches"][i]["windowstart"]
             infoURLs = jsonParsed["launches"][i]["infoURLs"]
             pad = jsonParsed["launches"][i]["location"]["pads"][0]["name"]
-            launches.append(Launch(name, date, infoURLs, pad))
+            imageURL = jsonParsed["launches"][i]["rocket"]["imageURL"]
+            if (imageURL[0:4] != "http"):
+                imageURL = None
+            if ("placeholder" in str(imageURL)):
+                imageURL = None
+            launches.append(Launch(name, date, infoURLs, pad, imageURL))
         launchesToday = []
         launchesFuture = []
         # Figure out which launches are today; which are in the future
@@ -88,12 +94,21 @@ def job():
                 launchesFuture.append(launch)
         # If no launches, tweet thread of upcoming ones
         if (len(launchesToday) == 0):
-            api.update_status("There are no launches scheduled for today! However, the following are coming up soon:")
+            api.update_status("There are no launches scheduled for today, " + datetime.datetime.now().strftime('%m-%d-%Y') + "! However, the following are coming up soon:")
             for launch in launchesFuture:
                 tweets = api.user_timeline(screen_name="rLaunchBot", count=1)
                 for tweet in tweets:
-                    api.update_status("@rLaunchBot " + makeUpcomingLaunchString(launch), in_reply_to_status_id=tweet.id)
-        # If launches today, tweet those and a thread of upcoming ones
+                    if (launch.imageURL == None):
+                        api.update_status("@rLaunchBot " + makeUpcomingLaunchString(launch), in_reply_to_status_id=tweet.id)
+                    else:
+                        filename = 'temp.jpg'
+                        request = requests.get(launch.imageURL, stream=True)
+                        if request.status_code == 200:
+                            with open(filename, 'wb') as image:
+                                for chunk in request:
+                                    image.write(chunk)
+                            api.update_with_media(filename, "@rLaunchBot " + makeUpcomingLaunchString(launch), in_reply_to_status_id=tweet.id)
+                            os.remove(filename)
         else:
             for launch in launchesToday:
                 dateList = launch.date.split(' ')
@@ -101,14 +116,45 @@ def job():
                     urls = ""
                     for URL in launch.infoURLs:
                         urls += " " + URL
-                    api.update_status(launch.name + " is launching today at " + dateList[3] + " UTC! At " + launch.pad + ". For more information, visit " + urls)
+                    if (launch.imageURL == None):
+                        api.update_status(launch.name + " is launching today at " + dateList[3] + " UTC! At " + launch.pad + ". For more information, visit " + urls)
+                    else:
+                        filename = 'temp.jpg'
+                        request = requests.get(launch.imageURL, stream=True)
+                        if request.status_code == 200:
+                            with open(filename, 'wb') as image:
+                                for chunk in request:
+                                    image.write(chunk)
+                            api.update_with_media(filename, launch.name + " is launching today at " + dateList[3] + " UTC! At " + launch.pad + ". For more information, visit " + urls)
+                            os.remove(filename)
                 else:
-                    api.update_status(launch.name + " is launching today at " + dateList[3] + " UTC! At " + launch.pad + ".")
-            api.update_status("The following are coming up soon:")
+                    if (launch.imageURL == None):
+                        api.update_status(launch.name + " is launching today at " + dateList[3] + " UTC! At " + launch.pad + ".")
+                    else:
+                        filename = 'temp.jpg'
+                        request = requests.get(launch.imageURL, stream=True)
+                        if request.status_code == 200:
+                            with open(filename, 'wb') as image:
+                                for chunk in request:
+                                    image.write(chunk)
+                            api.update_with_media(filename, launch.name + " is launching today at " + dateList[3] + " UTC! At " + launch.pad + ".")
+                            os.remove(filename)
+            api.update_with_media("/path/to/upcoming/launches/image", "Upcoming launches for " + datetime.datetime.now().strftime('%m-%d-%Y') + ":")
             for launch in launchesFuture:
                 tweets = api.user_timeline(screen_name="rLaunchBot", count=1)
                 for tweet in tweets:
-                    api.update_status("@rLaunchBot " + makeUpcomingLaunchString(launch), in_reply_to_status_id=tweet.id)
+                    if (launch.imageURL == None):
+                        api.update_status("@rLaunchBot " + makeUpcomingLaunchString(launch), in_reply_to_status_id=tweet.id)
+                    else:
+                        filename = 'temp.jpg'
+                        request = requests.get(launch.imageURL, stream=True)
+                        if request.status_code == 200:
+                            with open(filename, 'wb') as image:
+                                for chunk in request:
+                                    image.write(chunk)
+                            api.update_with_media(filename, "@rLaunchBot " + makeUpcomingLaunchString(launch), in_reply_to_status_id=tweet.id)
+                            os.remove(filename)
+                        
     else:
         print 'GET request failed!'
         
@@ -118,5 +164,3 @@ schedule.every().day.at("03:00").do(job)
 while True:
     schedule.run_pending()
     time.sleep(60)
-
-
