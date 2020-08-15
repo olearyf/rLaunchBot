@@ -58,6 +58,7 @@ def makeUpcomingLaunchString(launch):
 
 # Parses the API response and tweets launch information
 def job():
+    
     # Authenticate Twitter access
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
@@ -98,11 +99,11 @@ def job():
                 dateList = launch.date.split(' ')
                 if (launch.infoURLs != None):
                     urls = ""
-                    for URL in launch.infoURLS:
+                    for URL in launch.infoURLs:
                         urls += " " + URL
-                    api.update_status(launch.title + " is launching today at " + dateList[3] + "UTC! At " + launch.pad + ". For more information, visit " + urls)
+                    api.update_status(launch.name + " is launching today at " + dateList[3] + " UTC! At " + launch.pad + ". For more information, visit " + urls)
                 else:
-                    api.update_status(launch.title + " is launching today at " +dateList[3] + "UTC! At " + launch.pad + ".")
+                    api.update_status(launch.name + " is launching today at " + dateList[3] + " UTC! At " + launch.pad + ".")
             api.update_status("The following are coming up soon:")
             for launch in launchesFuture:
                 tweets = api.user_timeline(screen_name="rLaunchBot", count=1)
