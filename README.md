@@ -11,3 +11,4 @@
 - better parsing and formatting for the explanation for the APOD; right now it just cuts it into chunks that fit into the tweet, whereas ideally it would divide it into whole sentences that fit
 - adding in a wiki link to go along with the topic of the APOD
 - more information for launches, such as responsible agencies, videos, informational links, photos scraped from a google search, etc
+- ability to reply to a launch listing with 'Remind me!', at which point the bot will DM the user that replied 30 minutes before the launch they commented under
