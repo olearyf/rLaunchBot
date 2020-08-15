@@ -1,5 +1,7 @@
 # 🚀 [@rLaunchBot](https://twitter.com/rLaunchBot)
 
+**Note: rLaunchBot is a work in progress!**
+
 ![](https://github.com/olearyf/rLaunchBot/blob/master/images/rLaunchBotProfile.JPG)
 
 # 🛰 About
@@ -27,3 +29,4 @@
 - adding in the ability to reply to a launch with 'Remind me!' and have the bot DM you 1 hour before the launch occurs
 - descriptions for launches that have them
 - tweet random rocket facts
+- consolidate into one master script - for now it's easier to have modular scripts I can tinker with!
