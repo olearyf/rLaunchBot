@@ -7,6 +7,10 @@
     EST this script will get the Astronomy Picture of the Day
     and tweet it along with a thread containing the explanation
     provided by NASA.
+    
+    Update 8/16/2020 - some incoming images exceed the max file size Tweepy can tweet!
+    (3072 kb) As a result, Pillow is now imported to adjust the size
+    of an image if it is too big to be tweeted.
 """
 import schedule
 import time
@@ -14,6 +18,7 @@ import tweepy
 import requests
 import json
 import os
+from PIL import Image
 
 # Define authentication keys
 consumer_key = 'your_consumer_key'
@@ -55,6 +60,15 @@ def job():
             with open(filename, 'wb') as image:
                 for chunk in request:
                     image.write(chunk)
+            # If image is larger than acceptable size, resize
+            if ((os.path.getsize(filename) / 1000) >= 3072):
+                newImage = Image.open(filename)
+                size = newImage.size
+                width = size[0]
+                height = size[1]
+                # Right now just approximate. Will use fancier math later.
+                newImage = newImage.resize((width - 200, height - 200))
+                newImage.save(filename)
             api.update_with_media(filename, "APOD for " + testImage.date + ": " + testImage.title)
             os.remove(filename)
             chunks = parseExplanation(testImage.explanation)
