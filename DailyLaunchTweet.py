@@ -77,6 +77,8 @@ def job():
             name = jsonParsed["launches"][i]["name"]
             date = jsonParsed["launches"][i]["windowstart"]
             infoURLs = jsonParsed["launches"][i]["infoURLs"]
+            if not infoURLs:
+                infoURLs = None
             pad = jsonParsed["launches"][i]["location"]["pads"][0]["name"]
             imageURL = jsonParsed["launches"][i]["rocket"]["imageURL"]
             if (imageURL[0:4] != "http"):
