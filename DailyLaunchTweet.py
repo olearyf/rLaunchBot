@@ -1,3 +1,13 @@
+"""
+    Frances O'Leary updated 8/19/2020
+    
+    Tweets a daily informational launch tweet
+    on @rLaunchBot on Twitter. If a launch is occuring,
+    it gets its own tweet, and a follow up tweet occurs
+    with upcoming launches. If there is no launch for today, a thread
+    of upcoming launches is published. Additionally, should a 
+    photo of the rocket exist, it is included in the tweet.
+"""
 import schedule
 import time
 import tweepy
