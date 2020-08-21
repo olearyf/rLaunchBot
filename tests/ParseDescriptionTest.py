@@ -1,13 +1,12 @@
+# -*- coding: utf-8 -*-
 """
     Frances O'Leary, 8/21/2020
-
     I have a problem to solve. The NASA API returns
     a long string as the description to go along with an
     APOD photo. For a thread, I can only tweet a maximum of
     262 characters per tweet. Right now I just chop up my strings
     without caring if I cut a word in two. To fix this, I'm
     trying out a new parseExplanation function
-
     The first thing I'm going to try to do is just keep
     from chopping up words. The original is in currentParseExplanation
     and the new solution is in newParseExplanation.
@@ -32,10 +31,10 @@ def newParseExplanation(explanation):
     chunks = []
     while 1:
         testChunk = explanation[:262]
-        if len(testChunk == 262):
+        if (len(testChunk) == 262):
             lastWordIndex = testChunk.rfind(' ')
             chunks.append(explanation[:lastWordIndex])
-            explanation = [lastWordIndex:]
+            explanation = explanation[lastWordIndex:]
         else:
             chunks.append(testChunk)
             break
@@ -49,3 +48,6 @@ def printChunks(chunks):
         print chunk
     print "_____________________"
     print "End of chunks."
+
+for explanation in testExplanations:
+    printChunks(newParseExplanation(explanation))

@@ -33,7 +33,20 @@ class NASAImage:
         
 def parseExplanation(explanation):
     n = 262
-    chunks = [explanation[i:i+n] for i in range(0, len(explanation), n)]
+    explanationLength = len(explanation)
+    if explanationLength < 262:
+        return explanation
+    chunks = []
+    while 1:
+        testChunk = explanation[:262]
+        if (len(testChunk) == 262):
+            lastWordIndex = testChunk.rfind(' ')
+            chunks.append(explanation[:lastWordIndex])
+            explanation = explanation[lastWordIndex:]
+        else:
+            chunks.append(testChunk)
+            break
+
     return chunks
 
 def job():
