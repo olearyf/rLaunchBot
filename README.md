@@ -22,7 +22,7 @@
 
 # 🌌 Known Issues/Things I'm Currently Working On
 
-- better parsing and formatting for the explanation for the APOD; right now it just cuts it into chunks that fit into the tweet, whereas ideally it would divide it into whole sentences that fit
+- ~~better parsing and formatting for the explanation for the APOD; right now it just cuts it into chunks that fit into the tweet, whereas ideally it would divide it into whole sentences that fit~~(Now it doesn't split up words)
 - adding in a wiki link to go along with the topic of the APOD
 - more information for launches, such as responsible agencies, videos, informational links, ~~photos scraped from a google search~~(Launch Library supplies URLs!), etc
 - adding in the ability to reply to a launch with 'Remind me!' and have the bot DM you 1 hour before the launch occurs
