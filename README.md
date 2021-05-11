@@ -29,3 +29,4 @@
 - descriptions for launches that have them
 - tweet random rocket facts
 - consolidate into one master script - for now it's easier to have modular scripts I can tinker with!
+- the launch API I was previously using is now deprecated, thus current work focuses on migrating to a new API and adding some new features for the update
